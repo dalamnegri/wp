@@ -10,7 +10,12 @@ input,select,textarea{width:100%;padding:10px;border:1px solid #cbd5e1;border-ra
 textarea{min-height:220px;font-family:ui-monospace,Menlo,Consolas,monospace}
 .row{display:flex;gap:12px}.row>div{flex:1}
 .hint{color:#64748b;font-size:.88rem}
-#status{margin-top:12px;font-weight:600}</style>
+#status{margin-top:12px;font-weight:600}
+.photos{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:10px}
+.photos figure{margin:0;font-size:.72rem;color:#555}
+.photos img{width:100%;height:110px;object-fit:cover;border-radius:8px;cursor:pointer;border:3px solid transparent;display:block}
+.photos img.sel{border-color:#0ea5e9}
+.selinfo{font-size:.85rem;color:#15803d;font-weight:600;margin-top:8px}</style>
 </head>
 <body>
 <header class="site-header"><div class="container nav">
@@ -37,6 +42,15 @@ pilih repo <code>dalamnegri/wp</code>, izin <code>Contents: Read and write</code
 </div>
 
 <hr style="margin:24px 0" />
+<label>Pexels API Key (hanya di browser ini, untuk foto otomatis)</label>
+<input id="pxkey" type="password" placeholder="key Pexels..." autocomplete="off" />
+<div class="row">
+<div><button class="btn primary" id="savePx" style="color:#00121c;margin-top:10px">Simpan key Pexels</button></div>
+<div><button class="btn" id="clearPx" style="color:#0f172a;margin-top:10px">Hapus key</button></div>
+</div>
+<p class="hint">Tanpa key pun bisa publish (artikel tanpa foto). Key tidak pernah masuk repo.</p>
+
+<hr style="margin:24px 0" />
 <label>Judul</label><input id="title" placeholder="Contoh: Asuransi Pendidikan Terbaik 2026" />
 <div class="row">
 <div><label>Slug (otomatis)</label><input id="slug" placeholder="asuransi-pendidikan-terbaik-2026" /></div>
@@ -44,6 +58,13 @@ pilih repo <code>dalamnegri/wp</code>, izin <code>Contents: Read and write</code
 </div>
 <label>Tanggal</label><input id="date" type="date" />
 <label>Ringkasan (excerpt)</label><input id="excerpt" placeholder="1 kalimat ringkasan untuk kartu artikel" />
+<label>Foto Sampul (Pexels — klik salah satu, opsional)</label>
+<div class="row">
+<div><input id="pxq" placeholder="kata kunci foto, mis. family health" /></div>
+<div style="flex:0 0 auto"><button class="btn primary" id="pxfind" style="color:#00121c" type="button">Cari foto</button></div>
+</div>
+<div class="photos" id="pxgrid"></div>
+<p class="selinfo" id="pxsel"></p>
 <label>Isi (Markdown)</label>
 <textarea id="body">## Subjudul
 
@@ -69,6 +90,35 @@ $('title').addEventListener('input', e => {
 });
 $('saveToken').onclick = () => { localStorage.setItem('gh_token', $('token').value.trim()); setStatus('Token tersimpan di browser ini.', true); };
 $('clearToken').onclick = () => { localStorage.removeItem('gh_token'); $('token').value=''; setStatus('Token dihapus.', true); };
+$('pxkey').value = localStorage.getItem('px_key') || '';
+$('savePx').onclick = () => { localStorage.setItem('px_key', $('pxkey').value.trim()); setStatus('Key Pexels tersimpan di browser ini.', true); };
+$('clearPx').onclick = () => { localStorage.removeItem('px_key'); $('pxkey').value=''; selPhoto=null; setStatus('Key Pexels dihapus.', true); };
+const PXQ = {Kesehatan:'family health doctor',Jiwa:'happy family parents children',Kendaraan:'car driving road',Pendidikan:'children school education',Perjalanan:'travel airplane vacation',Syariah:'mosque islamic',Keuangan:'money finance savings',Properti:'house home exterior'};
+let selPhoto = null;
+$('pxfind').onclick = async () => {
+  try{
+    const key = localStorage.getItem('px_key');
+    if(!key) return setStatus('Isi & simpan key Pexels dulu (atau publish tanpa foto).', false);
+    const q = $('pxq').value.trim() || PXQ[$('category').value.trim()] || 'insurance family';
+    setStatus('Mencari foto...', true);
+    const r = await fetch('https://api.pexels.com/v1/search?' + new URLSearchParams({query:q, per_page:6, orientation:'landscape'}), {headers:{Authorization:key}});
+    if(!r.ok) throw new Error('Pexels menolak key (HTTP '+r.status+') — cek key di dashboard Pexels.');
+    const j = await r.json();
+    const fotos = j.photos || [];
+    if(!fotos.length) return setStatus('Tidak ada foto untuk kata kunci itu.', false);
+    selPhoto = null; $('pxsel').textContent = '';
+    $('pxgrid').innerHTML = fotos.map((f,i)=>`<figure><img data-i="${i}" src="${f.src.medium}" alt="${f.alt||''}" /><figcaption>${f.photographer}</figcaption></figure>`).join('');
+    window._fotos = fotos;
+    $('pxgrid').querySelectorAll('img').forEach(img=>img.onclick=()=>{
+      $('pxgrid').querySelectorAll('img').forEach(x=>x.classList.remove('sel'));
+      img.classList.add('sel');
+      selPhoto = window._fotos[+img.dataset.i];
+      $('pxsel').textContent = 'Terpilih: foto oleh ' + selPhoto.photographer + ' (akan diunggah saat publish).';
+    });
+    setStatus('Klik salah satu foto untuk memilih.', true);
+  }catch(e){ setStatus('Gagal: '+e.message, false); }
+};
+function b64bytes(buf){ const b=new Uint8Array(buf); let s=''; const CH=0x8000; for(let i=0;i<b.length;i+=CH){ s+=String.fromCharCode.apply(null,b.subarray(i,i+CH)); } return btoa(s); }
 function setStatus(m, ok){ const s=$('status'); s.textContent=m; s.style.color= ok ? '#15803d' : '#b91c1c'; }
 function b64(s){ return btoa(unescape(encodeURIComponent(s))); }
 async function gh(path, method, body){
@@ -91,14 +141,28 @@ $('publish').onclick = async () => {
     if(!slug || !title) return setStatus('Judul & slug wajib diisi.', false);
     setStatus('Mengirim ke GitHub...', true);
     const owner=$('owner').value.trim(), repo=$('repo').value.trim(), branch=$('branch').value.trim()||'main';
-    const md = `---\ntitle: ${JSON.stringify(title)}\ndate: ${$('date').value}\ncategory: ${$('category').value}\nexcerpt: ${JSON.stringify($('excerpt').value)}\n---\n\n${$('body').value}\n`;
+    let imgMeta = '', imgEntry = {};
+    if(selPhoto){
+      try{
+        setStatus('Mengunduh & mengunggah foto...', true);
+        const fr = await fetch(selPhoto.src.large || selPhoto.src.medium);
+        if(!fr.ok) throw new Error('unduh foto gagal (HTTP '+fr.status+')');
+        const buf = await fr.arrayBuffer();
+        const imgPath = `content/images/${slug}.jpg`;
+        await gh(imgPath,'PUT',{ message:`Foto: ${slug}`, content:b64bytes(buf), branch, ...(await getSha(imgPath) ? {sha: await getSha(imgPath)} : {}) });
+        const credit = `Foto oleh ${selPhoto.photographer} dari Pexels`;
+        imgMeta = `image: /content/images/${slug}.jpg\nimage_credit: ${JSON.stringify(credit)}\nimage_url: ${selPhoto.photographer_url}\n`;
+        imgEntry = {image:`/content/images/${slug}.jpg`, image_credit:credit, image_url:selPhoto.photographer_url};
+      }catch(e){ return setStatus('Gagal upload foto (artikel tidak jadi dipublish): '+e.message+'. Coba tanpa foto.', false); }
+    }
+    const md = `---\ntitle: ${JSON.stringify(title)}\ndate: ${$('date').value}\ncategory: ${$('category').value}\nexcerpt: ${JSON.stringify($('excerpt').value)}\n${imgMeta}---\n\n${$('body').value}\n`;
     const mdPath = `content/posts/${slug}.md`;
     await gh(mdPath,'PUT',{ message:`Post: ${title}`, content:b64(md), branch, ...(await getSha(mdPath) ? {sha: await getSha(mdPath)} : {}) });
     // update index.json
     let idx = [];
     try { const cur = await gh('content/index.json','GET'); idx = JSON.parse(decodeURIComponent(escape(atob(cur.content.replace(/\n/g,''))))); var idxSha = cur.sha; } catch(e){ idx = []; }
     idx = idx.filter(x=>x.slug!==slug);
-    idx.unshift({ slug, title, date:$('date').value, category:$('category').value, excerpt:$('excerpt').value });
+    idx.unshift({ slug, title, date:$('date').value, category:$('category').value, excerpt:$('excerpt').value, ...imgEntry });
     idx.sort((a,b)=> (b.date||'').localeCompare(a.date||''));
     await gh('content/index.json','PUT',{ message:`Index: ${slug}`, content:b64(JSON.stringify(idx,null,2)+'\n'), branch, ...(idxSha?{sha:idxSha}:{}) });
     setStatus(`Berhasil! Lihat di /blog/post.html?p=${slug} (tunggu deploy 1–2 mnt).`, true);
