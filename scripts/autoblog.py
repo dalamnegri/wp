@@ -20,8 +20,9 @@ POSTS = os.path.join(REPO_DIR, "content", "posts")
 INDEX = os.path.join(REPO_DIR, "content", "index.json")
 
 SYSTEM = ("Kamu penulis blog asuransi/keuangan Indonesia. Tulis artikel ORISINAL Bahasa Indonesia "
-          "yang santai tapi akurat, SEKITAR 300 KATA (±250-350), terstruktur (2-3 subjudul ##, "
-          "satu list, satu contoh angka). Dilarang menjiplak artikel lain. "
+          "yang santai tapi akurat, WAJIB 300-400 KATA (jangan berhenti sebelum 300 kata), "
+          "terstruktur (3-4 subjudul ##, satu list, satu contoh angka rupiah). "
+          "Dilarang menjiplak artikel lain. "
           "Akhiri dengan disclaimer 1 kalimat bahwa ini edukasi, bukan saran finansial berlisensi.")
 
 def slugify(s):
@@ -29,20 +30,48 @@ def slugify(s):
     s = re.sub(r"[^a-z0-9\s-]", "", s).strip()
     return re.sub(r"-+", "-", re.sub(r"\s+", "-", s))[:80] or "artikel"
 
-def pop_queue():
-    """Ambil 1 antrean. Format baris: 'Judul saja' atau 'Kategori | Judul'.
-    Mengembalikan (kategori, judul) atau (None, None) bila kosong."""
+def hitung_kata(s):
+    return len(re.findall(r"\S+", s))
+
+def clean_excerpt(s, limit=200):
+    s = re.sub(r"^#+\s*", "", s)
+    for ch in ('*', '_', '`', '"'):
+        s = s.replace(ch, "")
+    return re.sub(r"\s+", " ", s).strip()[:limit].rstrip()
+
+def split_hasil(teks):
+    """Pisahkan ringkasan 1 baris dan isi artikel. Kembalikan (ringkasan, isi)."""
+    lines = teks.split("\n")
+    while lines and not lines[0].strip():
+        lines.pop(0)
+    if lines and lines[0].strip().upper().startswith("RINGKASAN:"):
+        ringkas = lines[0].split(":", 1)[1].strip()
+        isi = "\n".join(lines[1:]).strip()
+        if ringkas:
+            return clean_excerpt(ringkas), (isi or teks.strip())
+    first = next((l.strip() for l in lines if l.strip()), "")
+    return clean_excerpt(first), teks.strip()
+
+def baca_antrean():
     if not os.path.exists(QUEUE):
-        return None, None
-    lines = [l.strip() for l in open(QUEUE, encoding="utf-8") if l.strip()]
+        return []
+    return [l.strip() for l in open(QUEUE, encoding="utf-8") if l.strip()]
+
+def pop_queue():
+    lines = baca_antrean()
     if not lines:
         return None, None
     first = lines[0]
-    open(QUEUE, "w", encoding="utf-8").write("\n".join(lines[1:]) + ("\n" if len(lines) > 1 else ""))
     if " | " in first:
         kat, judul = first.split(" | ", 1)
         return kat.strip() or "Umum", judul.strip()
     return "Umum", first
+
+def hapus_kepala(baris_mentah):
+    """Hapus baris antrean teratas HANYA setelah artikel sukses ditulis."""
+    lines = baca_antrean()
+    if lines and lines[0] == baris_mentah:
+        open(QUEUE, "w", encoding="utf-8").write("\n".join(lines[1:]) + ("\n" if len(lines) > 1 else ""))
 
 def generate(judul, kategori, dry_run):
     if dry_run:
@@ -56,7 +85,7 @@ def generate(judul, kategori, dry_run):
         "messages": [
             {"role": "system", "content": SYSTEM},
             {"role": "user", "content": f"Tulis artikel lengkap berjudul: {judul}\nKategori: {kategori}\n"
-             "Awali dengan ringkasan 1 kalimat diawali 'RINGKASAN: ', lalu isi artikel markdown."},
+             "Panjang WAJIB minimal 300 kata. Awali dengan ringkasan 1 kalimat diawali 'RINGKASAN: ', lalu isi artikel markdown."},
         ],
         "temperature": 0.8, "max_tokens": 1200,
     }).encode()
@@ -84,18 +113,19 @@ def main():
     kategori = a.kategori.strip() or q_kat or "Umum"
     if not judul:
         sys.exit("Antrean kosong dan --judul tidak diisi. Tambah judul ke content/antrean-judul.txt")
+    dari_antrean = not a.judul.strip()
+    baris_mentah = next((l for l in baca_antrean()
+                         if l == judul or l.endswith(" | " + judul)), judul)
     slug = slugify(judul)
     target = os.path.join(POSTS, slug + ".md")
     if os.path.exists(target):
         sys.exit(f"Slug {slug} sudah ada — pilih judul lain.")
 
     teks = generate(judul, kategori, a.dry_run)
-    ringkasan, isi = "", teks
-    m = re.match(r"RINGKASAN:\s*(.+)\n+(.*)$", teks, re.S)
-    if m:
-        ringkasan, isi = m.group(1).strip(), m.group(2).strip()
-    else:
-        ringkasan = isi.split("\n")[0][:160]
+    ringkasan, isi = split_hasil(teks)
+    if not a.dry_run and hitung_kata(isi) < 200:
+        sys.exit(f"ERROR: artikel terlalu pendek ({hitung_kata(isi)} kata, minimal 200) — "
+                 f"tidak diterbitkan agar blog tidak rusak.")
 
     os.makedirs(POSTS, exist_ok=True)
     with open(target, "w", encoding="utf-8") as f:
@@ -108,7 +138,9 @@ def main():
                    "category": kategori, "excerpt": ringkasan})
     idx.sort(key=lambda x: x.get("date", ""), reverse=True)
     json.dump(idx, open(INDEX, "w", encoding="utf-8"), ensure_ascii=False, indent=2)
-    print(f"OK: {target} ({len(isi)} karakter)")
+    if dari_antrean and not a.dry_run:
+        hapus_kepala(baris_mentah)
+    print(f"OK: {target} ({hitung_kata(isi)} kata)")
 
 if __name__ == "__main__":
     main()
