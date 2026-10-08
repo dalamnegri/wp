@@ -7,8 +7,7 @@ export default {
       const key = env.NEWS_API_KEY;
       if (!key) {
         return Response.json(
-          { error: 'NEWS_API_KEY belum diisi (Worker wp > Settings > Variables and secrets).',
-            debug_vars: Object.keys(env || {}) },
+          { error: 'NEWS_API_KEY belum diisi (Worker wp > Settings > Variables and secrets).' },
           { status: 500 }
         );
       }

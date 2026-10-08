@@ -37,8 +37,8 @@
   </section>
 
   <section class="block">
-    <div class="block-head"><h2><span>Berita Kesehatan Dunia</span></h2><span style="font-size:.75rem;color:#888">otomatis via NewsAPI • klik untuk baca di sumber asli</span></div>
-    <div id="apinews"><div style="padding:20px;color:#888">Memuat berita otomatis...</div></div>
+    <div class="block-head"><h2><span>Dari Meja Redaksi</span></h2><a class="readmore2" href="/blog/">Lihat Semua →</a></div>
+    <div id="autoblog"></div>
   </section>
 </main>
 
@@ -114,14 +114,10 @@ fetch('/content/index.json').then(r=>r.json()).then(dyn=>{
   draw(pop,true);
   document.getElementById('tab-pop').onclick=e=>{document.getElementById('tab-new').classList.remove('on');e.target.classList.add('on');draw(pop,true);};
   document.getElementById('tab-new').onclick=e=>{document.getElementById('tab-pop').classList.remove('on');e.target.classList.add('on');draw(fresh,false);};
-  // berita otomatis via proxy /api/berita (Pages Function, key aman di server)
-  fetch('/api/berita?cat=health').then(r=>r.json()).then(j=>{
-    const box = document.getElementById('apinews');
-    if(!j.articles || !j.articles.length){ box.innerHTML = '<div style="padding:20px;color:#888">Belum ada berita. Set NEWS_API_KEY di Pages > Settings > Environment variables, lalu Deploy ulang.</div>'; return; }
-    box.innerHTML = j.articles.slice(0,6).map(a=>
-      `<article class="news-item">${a.image?`<a class="pic" style="background:url('${a.image}') center/cover" href="${a.url}" target="_blank" rel="noopener"></a>`:''}<div><span class="badge blue">${(a.source||'Berita').slice(0,24)}</span><h3><a href="${a.url}" target="_blank" rel="noopener">${a.title||''}</a></h3><p class="byline">${(a.publishedAt||'').slice(0,10)}</p><p class="excerpt">${a.description||''}</p><a class="readmore2" href="${a.url}" target="_blank" rel="noopener">Baca di sumber asli »</a></div></article>`
-    ).join('');
-  }).catch(()=>{ document.getElementById('apinews').innerHTML = '<div style="padding:20px;color:#888">Feed berita offline (mode lokal). Deploy ke Pages + set NEWS_API_KEY untuk mengaktifkan.</div>'; });
+  // blok autoblog: 6 artikel terbaru dari konten lokal (diisi DeepSeek via GitHub Actions)
+  document.getElementById('autoblog').innerHTML = posts.slice(0,6).map(p=>
+    `<article class="news-item"><a class="pic cat-${p.category||'Umum'}" href="${linkOf(p)}"><span style="font-size:3rem;margin:auto">${EMOJI[p.category]||'🛡️'}</span></a><div><span class="badge${badge(p.category)}">${p.category||''}</span><h3><a href="${linkOf(p)}">${p.title}</a></h3><p class="byline">${p.date||''}</p><p class="excerpt">${p.excerpt||''}</p><a class="readmore2" href="${linkOf(p)}">Baca Selengkapnya »</a></div></article>`
+  ).join('');
 }).catch(()=>{
   document.getElementById('ticker').innerHTML = STATIC.map(p=>`<a href="${p.file}"><b>●</b>${p.title}</a>`).join('');
 });
