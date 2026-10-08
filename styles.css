@@ -165,3 +165,29 @@ ul.check{padding-left:20px}
 .bottombar a{color:#999;text-decoration:none;margin-left:12px}
 @media(max-width:1024px){.mag-layout{grid-template-columns:1fr}.feat{grid-template-columns:1fr}.rel-grid{grid-template-columns:1fr 1fr}.foot .wrap{grid-template-columns:1fr 1fr}}
 @media(max-width:640px){.feat-side{grid-template-columns:1fr}.news-item{flex-direction:column}.news-item .pic{flex:none;min-height:160px}.rel-grid{grid-template-columns:1fr}.foot .wrap{grid-template-columns:1fr}.adbox{display:none}}
+
+/* ===== Mobile: burger menu + poles ===== */
+.navcheck{display:none}
+.burger{display:none}
+@media(max-width:768px){
+  .burger{display:block;color:#fff;font-weight:800;padding:13px 4px;cursor:pointer;user-select:none}
+  .mag-nav .wrap{flex-direction:column;align-items:stretch;padding:0 20px 0}
+  .mag-nav .wrap a{display:none;border-top:1px solid #2b2b40;padding:12px 4px}
+  .mag-nav .navcheck:checked ~ .wrap a{display:block}
+  .mag-nav{position:sticky;top:0}
+  .logo{font-size:1.45rem}
+  .brandrow .wrap{padding:14px 20px}
+  .searchbox{width:100%}
+  .ticker-label{padding:10px}
+  .ticker-track a{font-size:.8rem}
+  .thumb.big{min-height:240px}
+  .thumb.big .cap h2{font-size:1.2rem}
+  .single h1{font-size:1.35rem}
+  .single .pad{padding:18px}
+  .single .hero{height:180px}
+  .single table{display:block;overflow-x:auto}
+  .authorbox{flex-direction:column}
+  .row{flex-direction:column}
+  .wrap{padding:0 14px}
+  .topbar2{font-size:.72rem}
+}
