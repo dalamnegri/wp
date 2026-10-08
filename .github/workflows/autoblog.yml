@@ -1,10 +1,10 @@
 name: Autoblog DeepSeek
 on:
-  schedule: [{cron: "0 2 * * *"}]  # tiap 09:00 WIB
+  schedule: [{cron: "0 2 * * *"}]
   workflow_dispatch:
     inputs:
       judul: {description: "Judul (kosongkan = ambil antrean)", required: false}
-      kategori: {description: "Kategori", default: "Umum", required: false}
+      kategori: {description: "Kategori", default: "", required: false}
 jobs:
   tulis:
     runs-on: ubuntu-latest
