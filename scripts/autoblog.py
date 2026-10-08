@@ -9,11 +9,22 @@ Pakai:
 Key TIDAK BOLEH ditulis di file/repo/chat — cukup lewat environment variable
 (di GitHub: Secrets and variables > Actions > DEEPSEEK_API_KEY).
 """
-import argparse, json, os, re, sys, urllib.request
+import argparse, json, os, re, sys, urllib.request, urllib.parse
 from datetime import date
 
 API_URL = "https://api.deepseek.com/chat/completions"
 MODEL = "deepseek-chat"
+PEXELS_SEARCH = "https://api.pexels.com/v1/search"
+KATEGORI_QUERY = {
+    "Kesehatan": "family health doctor hospital",
+    "Jiwa": "happy family parents children",
+    "Kendaraan": "car driving road",
+    "Pendidikan": "children school education",
+    "Perjalanan": "travel airplane vacation",
+    "Syariah": "mosque islamic architecture",
+    "Keuangan": "money finance savings",
+    "Properti": "house home exterior",
+}
 REPO_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 QUEUE = os.path.join(REPO_DIR, "content", "antrean-judul.txt")
 POSTS = os.path.join(REPO_DIR, "content", "posts")
@@ -101,6 +112,41 @@ def generate(judul, kategori, dry_run):
     except (KeyError, IndexError):
         sys.exit(f"ERROR respons tak terduga: {str(body)[:200]}")
 
+def ambil_gambar_pexels(slug, kategori):
+    """Unduh 1 foto relevan dari Pexels. Kembalikan dict atau None bila dilewati.
+    Key dari env PEXELS_API_KEY (GitHub Secrets) — tidak pernah di-hardcode."""
+    key = os.environ.get("PEXELS_API_KEY", "").strip()
+    if not key:
+        print("INFO: PEXELS_API_KEY kosong — artikel tanpa foto.")
+        return None
+    try:
+        q = KATEGORI_QUERY.get(kategori, "insurance family")
+        req = urllib.request.Request(
+            PEXELS_SEARCH + "?" + urllib.parse.urlencode(
+                {"query": q, "per_page": 3, "orientation": "landscape"}),
+            headers={"Authorization": key})
+        with urllib.request.urlopen(req, timeout=30) as r:
+            fotos = (json.load(r) or {}).get("photos") or []
+        if not fotos:
+            print("INFO: Pexels tidak mengembalikan foto — artikel tanpa foto.")
+            return None
+        foto = fotos[0]
+        src = (foto.get("src") or {}).get("large") or (foto.get("src") or {}).get("medium")
+        if not src:
+            return None
+        dest = os.path.join(REPO_DIR, "content", "images", slug + ".jpg")
+        os.makedirs(os.path.dirname(dest), exist_ok=True)
+        with urllib.request.urlopen(src, timeout=60) as fr, open(dest, "wb") as fw:
+            fw.write(fr.read())
+        print(f"OK gambar: content/images/{slug}.jpg")
+        return {"image": f"/content/images/{slug}.jpg",
+                "credit": f"Foto oleh {foto.get('photographer', 'Pexels')} dari Pexels",
+                "url": foto.get("photographer_url", "https://www.pexels.com")}
+    except Exception as e:
+        print(f"INFO: gambar dilewati ({e})")
+        return None
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--judul", default="")
@@ -128,14 +174,23 @@ def main():
                  f"tidak diterbitkan agar blog tidak rusak.")
 
     os.makedirs(POSTS, exist_ok=True)
+    gbr = None if a.dry_run else ambil_gambar_pexels(slug, kategori)
+    img_meta = ""
+    if gbr:
+        img_meta = (f"image: {gbr['image']}\n"
+                    f"image_credit: {json.dumps(gbr['credit'], ensure_ascii=False)}\n"
+                    f"image_url: {gbr['url']}\n")
     with open(target, "w", encoding="utf-8") as f:
         f.write(f"---\ntitle: {json.dumps(judul)}\ndate: {date.today().isoformat()}\n"
-                f"category: {kategori}\nexcerpt: {json.dumps(ringkasan)}\n---\n\n{isi}\n")
+                f"category: {kategori}\nexcerpt: {json.dumps(ringkasan)}\n{img_meta}---\n\n{isi}\n")
 
     idx = json.load(open(INDEX, encoding="utf-8")) if os.path.exists(INDEX) else []
     idx = [x for x in idx if x.get("slug") != slug]
-    idx.insert(0, {"slug": slug, "title": judul, "date": date.today().isoformat(),
-                   "category": kategori, "excerpt": ringkasan})
+    entry = {"slug": slug, "title": judul, "date": date.today().isoformat(),
+             "category": kategori, "excerpt": ringkasan}
+    if gbr:
+        entry.update({"image": gbr["image"], "image_credit": gbr["credit"], "image_url": gbr["url"]})
+    idx.insert(0, entry)
     idx.sort(key=lambda x: x.get("date", ""), reverse=True)
     json.dump(idx, open(INDEX, "w", encoding="utf-8"), ensure_ascii=False, indent=2)
     if dari_antrean and not a.dry_run:

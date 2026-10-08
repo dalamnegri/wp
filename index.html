@@ -83,21 +83,24 @@ fetch('/content/index.json').then(r=>r.json()).then(dyn=>{
     document.getElementById('autoblog').innerHTML = '';
     return;
   }
+  // helper gambar: pakai foto Pexels bila ada, kalau tidak gradasi+emoji
+  const bg = p => p.image ? ` style="background-image:url('${p.image}');background-size:cover;background-position:center"` : '';
+  const em = p => p.image ? '' : `<span style="font-size:3rem;margin:auto">${EMOJI[p.category]||'🛡️'}</span>`;
   // ticker
   const items = posts.slice(0,6).map(p=>`<a href="${linkOf(p)}"><b>●</b>${p.title}</a>`).join('');
   document.getElementById('ticker').innerHTML = items + items;
   // featured: 1 big + up to 4 small
   const f = posts.slice(0,5);
   document.getElementById('featured').innerHTML =
-    `<a class="thumb big cat-${f[0].category}" href="${linkOf(f[0])}"><span class="score">${f[0].score||'9.0'}</span><span class="shade"></span><span class="cap"><span class="badge">${f[0].category}</span><h2>${f[0].title}</h2><span class="date">${f[0].date||''}</span></span></a>` +
+    `<a class="thumb big cat-${f[0].category}"${bg(f[0])} href="${linkOf(f[0])}"><span class="score">${f[0].score||'9.0'}</span><span class="shade"></span><span class="cap"><span class="badge">${f[0].category}</span><h2>${f[0].title}</h2><span class="date">${f[0].date||''}</span></span></a>` +
     '<div class="feat-side">' + f.slice(1).map(p=>
-      `<a class="thumb cat-${p.category}" href="${linkOf(p)}"><span class="shade"></span><span class="cap"><span class="badge"> ${p.category}</span><h3>${p.title}</h3><span class="date">${p.date||''}</span></span></a>`
+      `<a class="thumb cat-${p.category}"${bg(p)} href="${linkOf(p)}"><span class="shade"></span><span class="cap"><span class="badge"> ${p.category}</span><h3>${p.title}</h3><span class="date">${p.date||''}</span></span></a>`
     ).join('') + '</div>';
   // category tabs
   const renderCat = cat => {
     const list = posts.filter(p=>!cat||p.category===cat).slice(0,4);
     document.getElementById('cat-list').innerHTML = list.map(p=>
-      `<article class="news-item"><a class="pic cat-${p.category}" href="${linkOf(p)}"><span style="font-size:3rem;margin:auto">${EMOJI[p.category]||'🛡️'}</span></a><div><span class="badge${badge(p.category)}">${p.category}</span><h3><a href="${linkOf(p)}">${p.title}</a></h3><p class="byline">${p.date||''}</p><p class="excerpt">${p.excerpt||''}</p><a class="readmore2" href="${linkOf(p)}">Baca Selengkapnya »</a></div></article>`
+      `<article class="news-item"><a class="pic cat-${p.category}"${bg(p)} href="${linkOf(p)}">${em(p)}</a><div><span class="badge${badge(p.category)}">${p.category}</span><h3><a href="${linkOf(p)}">${p.title}</a></h3><p class="byline">${p.date||''}</p><p class="excerpt">${p.excerpt||''}</p><a class="readmore2" href="${linkOf(p)}">Baca Selengkapnya »</a></div></article>`
     ).join('') || '<div style="padding:20px">Belum ada artikel.</div>';
   };
   renderCat('');
@@ -107,7 +110,7 @@ fetch('/content/index.json').then(r=>r.json()).then(dyn=>{
   });
   // latest
   document.getElementById('latest').innerHTML = posts.slice(0,5).map(p=>
-    `<article class="news-item"><a class="pic cat-${p.category}" href="${linkOf(p)}"><span style="font-size:3rem;margin:auto">${EMOJI[p.category]||'🛡️'}</span></a><div><span class="badge${badge(p.category)}">${p.category}</span><h3><a href="${linkOf(p)}">${p.title}</a></h3><p class="byline">${p.date||''}</p><p class="excerpt">${p.excerpt||''}</p><a class="readmore2" href="${linkOf(p)}">Baca Selengkapnya »</a></div></article>`
+    `<article class="news-item"><a class="pic cat-${p.category}"${bg(p)} href="${linkOf(p)}">${em(p)}</a><div><span class="badge${badge(p.category)}">${p.category}</span><h3><a href="${linkOf(p)}">${p.title}</a></h3><p class="byline">${p.date||''}</p><p class="excerpt">${p.excerpt||''}</p><a class="readmore2" href="${linkOf(p)}">Baca Selengkapnya »</a></div></article>`
   ).join('');
   // sidebar tabs
   const pop = [...posts].slice(0,5), fresh = [...posts].sort((a,b)=>(b.date||'').localeCompare(a.date||'')).slice(0,5);
@@ -119,7 +122,7 @@ fetch('/content/index.json').then(r=>r.json()).then(dyn=>{
   document.getElementById('tab-new').onclick=e=>{document.getElementById('tab-pop').classList.remove('on');e.target.classList.add('on');draw(fresh,false);};
   // blok autoblog: 6 artikel terbaru dari konten lokal (diisi DeepSeek via GitHub Actions)
   document.getElementById('autoblog').innerHTML = posts.slice(0,6).map(p=>
-    `<article class="news-item"><a class="pic cat-${p.category||'Umum'}" href="${linkOf(p)}"><span style="font-size:3rem;margin:auto">${EMOJI[p.category]||'🛡️'}</span></a><div><span class="badge${badge(p.category)}">${p.category||''}</span><h3><a href="${linkOf(p)}">${p.title}</a></h3><p class="byline">${p.date||''}</p><p class="excerpt">${p.excerpt||''}</p><a class="readmore2" href="${linkOf(p)}">Baca Selengkapnya »</a></div></article>`
+    `<article class="news-item"><a class="pic cat-${p.category||'Umum'}"${bg(p)} href="${linkOf(p)}">${em(p)}</a><div><span class="badge${badge(p.category)}">${p.category||''}</span><h3><a href="${linkOf(p)}">${p.title}</a></h3><p class="byline">${p.date||''}</p><p class="excerpt">${p.excerpt||''}</p><a class="readmore2" href="${linkOf(p)}">Baca Selengkapnya »</a></div></article>`
   ).join('');
 }).catch(()=>{
   document.getElementById('ticker').innerHTML = STATIC.map(p=>`<a href="${p.file}"><b>●</b>${p.title}</a>`).join('');

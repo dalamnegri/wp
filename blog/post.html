@@ -55,7 +55,9 @@ function parseFM(t){
     if(!r.ok) throw new Error('Artikel tidak ditemukan (tunggu deploy / cek slug).');
     const {meta, body} = parseFM(await r.text());
     const html = (window.marked) ? marked.parse(body) : '<pre>'+esc(body)+'</pre>';
-    box.innerHTML = `<div class="hero cat-${esc(meta.category||'Umum')}"><span class="shade"></span></div><div class="pad"><p class="crumbs"><a href="/">Beranda</a> » <a href="/blog/">Artikel</a> » ${esc(meta.category||'')}</p><span class="badge">${esc(meta.category||'')}</span><h1>${esc(meta.title||slug)}</h1><div class="byline2"><span class="avatar">R</span><span>Redaksi</span><span>${esc(meta.date||'')}</span></div>${html}<p><a href="/blog/">← Semua artikel</a></p></div>`;
+    const heroBg = meta.image ? ` style="background-image:url('${meta.image}');background-size:cover;background-position:center"` : '';
+    const credit = (meta.image_credit && meta.image_url) ? `<p style="font-size:.78rem;color:#888">Foto: <a href="${esc(meta.image_url)}" target="_blank" rel="noopener">${esc(meta.image_credit)}</a> / Pexels</p>` : '';
+    box.innerHTML = `<div class="hero cat-${esc(meta.category||'Umum')}"${heroBg}><span class="shade"></span></div><div class="pad"><p class="crumbs"><a href="/">Beranda</a> » <a href="/blog/">Artikel</a> » ${esc(meta.category||'')}</p><span class="badge">${esc(meta.category||'')}</span><h1>${esc(meta.title||slug)}</h1><div class="byline2"><span class="avatar">R</span><span>Redaksi</span><span>${esc(meta.date||'')}</span></div>${credit}${html}<p><a href="/blog/">← Semua artikel</a></p></div>`;
     document.title = (meta.title||slug)+' — BlogInsurance';
   }catch(e){ box.innerHTML = '<div class="pad"><h1>Gagal memuat</h1><p>'+esc(e.message)+'</p></div>'; }
   fetch('/content/index.json').then(r=>r.json()).then(posts=>{

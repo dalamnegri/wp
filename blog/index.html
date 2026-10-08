@@ -43,6 +43,7 @@
   const q = new URLSearchParams(location.search);
   const s = (q.get('s')||'').toLowerCase(), cat = q.get('cat')||'';
   const linkOf = p => p.file || ('/blog/post.html?p='+p.slug);
+  const bg = p => p.image ? ` style="background-image:url('${p.image}');background-size:cover;background-position:center"` : '';
   const STATIC = [];
   if(s) document.getElementById('archive-title').textContent = 'Pencarian: ' + q.get('s');
   if(cat) document.getElementById('archive-title').textContent = 'Kategori: ' + cat;
@@ -54,7 +55,7 @@
     if(s) posts = posts.filter(p=>((p.title||'')+' '+(p.excerpt||'')).toLowerCase().includes(s));
     document.getElementById('archive-count').textContent = posts.length + ' artikel';
     document.getElementById('list').innerHTML = posts.length ? posts.map(p=>
-      `<article class="news-item"><a class="pic cat-${p.category}" href="${linkOf(p)}"></a><div><span class="badge">${p.category}</span><h3><a href="${linkOf(p)}">${p.title}</a></h3><p class="byline">${p.date||''}</p><p class="excerpt">${p.excerpt||''}</p><a class="readmore2" href="${linkOf(p)}">Baca Selengkapnya »</a></div></article>`
+      `<article class="news-item"><a class="pic cat-${p.category}"${bg(p)} href="${linkOf(p)}"></a><div><span class="badge">${p.category}</span><h3><a href="${linkOf(p)}">${p.title}</a></h3><p class="byline">${p.date||''}</p><p class="excerpt">${p.excerpt||''}</p><a class="readmore2" href="${linkOf(p)}">Baca Selengkapnya »</a></div></article>`
     ).join('') : '<div style="padding:20px">Tidak ada artikel yang cocok. <a href="/blog/">Lihat semua</a></div>';
   }).catch(()=>{ document.getElementById('recent-posts').innerHTML='<li><a href="/blog/">Lihat semua artikel</a></li>'; });
 })();
