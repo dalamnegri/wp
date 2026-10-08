@@ -1,0 +1,32 @@
+# WordPress lokal (opsional) — hanya jika Anda mau editor ala WordPress.
+# Template statis di folder ini TIDAK butuh ini untuk tayang di Cloudflare Pages.
+# Jika mau nulis di WP lalu export jadi statis:
+#   1. docker compose up -d  -> buka http://localhost:8080, install WP
+#   2. Install plugin "Simply Static" di WP, generate ZIP statis, ekstrak & copy ke folder ini
+#   3. git push -> otomatis deploy ke Pages
+services:
+  db:
+    image: mysql:8.0
+    restart: unless-stopped
+    environment:
+      MYSQL_DATABASE: wordpress
+      MYSQL_USER: wordpress
+      MYSQL_PASSWORD: wordpress
+      MYSQL_ROOT_PASSWORD: rootpass
+    volumes:
+      - db_data:/var/lib/mysql
+  wordpress:
+    image: wordpress:latest
+    restart: unless-stopped
+    ports:
+      - "8080:80"
+    environment:
+      WORDPRESS_DB_HOST: db
+      WORDPRESS_DB_USER: wordpress
+      WORDPRESS_DB_PASSWORD: wordpress
+      WORDPRESS_DB_NAME: wordpress
+    volumes:
+      - wp_data:/var/www/html
+volumes:
+  db_data:
+  wp_data:
