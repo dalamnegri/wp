@@ -20,8 +20,9 @@ POSTS = os.path.join(REPO_DIR, "content", "posts")
 INDEX = os.path.join(REPO_DIR, "content", "index.json")
 
 SYSTEM = ("Kamu penulis blog asuransi/keuangan Indonesia. Tulis artikel ORISINAL Bahasa Indonesia "
-          "yang santai tapi akurat, 600-900 kata, terstruktur (subjudul ##, list, contoh angka). "
-          "Dilarang menjiplak artikel lain. Akhiri dengan disclaimer 1 kalimat bahwa ini edukasi, bukan saran finansial berlisensi.")
+          "yang santai tapi akurat, SEKITAR 300 KATA (±250-350), terstruktur (2-3 subjudul ##, "
+          "satu list, satu contoh angka). Dilarang menjiplak artikel lain. "
+          "Akhiri dengan disclaimer 1 kalimat bahwa ini edukasi, bukan saran finansial berlisensi.")
 
 def slugify(s):
     s = s.lower()
@@ -29,14 +30,19 @@ def slugify(s):
     return re.sub(r"-+", "-", re.sub(r"\s+", "-", s))[:80] or "artikel"
 
 def pop_queue():
+    """Ambil 1 antrean. Format baris: 'Judul saja' atau 'Kategori | Judul'.
+    Mengembalikan (kategori, judul) atau (None, None) bila kosong."""
     if not os.path.exists(QUEUE):
-        return None
+        return None, None
     lines = [l.strip() for l in open(QUEUE, encoding="utf-8") if l.strip()]
     if not lines:
-        return None
-    judul = lines[0]
+        return None, None
+    first = lines[0]
     open(QUEUE, "w", encoding="utf-8").write("\n".join(lines[1:]) + ("\n" if len(lines) > 1 else ""))
-    return judul
+    if " | " in first:
+        kat, judul = first.split(" | ", 1)
+        return kat.strip() or "Umum", judul.strip()
+    return "Umum", first
 
 def generate(judul, kategori, dry_run):
     if dry_run:
@@ -52,7 +58,7 @@ def generate(judul, kategori, dry_run):
             {"role": "user", "content": f"Tulis artikel lengkap berjudul: {judul}\nKategori: {kategori}\n"
              "Awali dengan ringkasan 1 kalimat diawali 'RINGKASAN: ', lalu isi artikel markdown."},
         ],
-        "temperature": 0.8, "max_tokens": 2500,
+        "temperature": 0.8, "max_tokens": 1200,
     }).encode()
     req = urllib.request.Request(API_URL, data=payload,
                                  headers={"Authorization": "Bearer " + key, "Content-Type": "application/json"})
@@ -69,11 +75,13 @@ def generate(judul, kategori, dry_run):
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--judul", default="")
-    ap.add_argument("--kategori", default="Umum")
+    ap.add_argument("--kategori", default="")
     ap.add_argument("--dry-run", action="store_true")
     a = ap.parse_args()
 
-    judul = a.judul.strip() or pop_queue()
+    q_kat, q_judul = pop_queue() if not a.judul.strip() else ("", "")
+    judul = a.judul.strip() or q_judul
+    kategori = a.kategori.strip() or q_kat or "Umum"
     if not judul:
         sys.exit("Antrean kosong dan --judul tidak diisi. Tambah judul ke content/antrean-judul.txt")
     slug = slugify(judul)
@@ -81,7 +89,7 @@ def main():
     if os.path.exists(target):
         sys.exit(f"Slug {slug} sudah ada — pilih judul lain.")
 
-    teks = generate(judul, a.kategori, a.dry_run)
+    teks = generate(judul, kategori, a.dry_run)
     ringkasan, isi = "", teks
     m = re.match(r"RINGKASAN:\s*(.+)\n+(.*)$", teks, re.S)
     if m:
@@ -92,12 +100,12 @@ def main():
     os.makedirs(POSTS, exist_ok=True)
     with open(target, "w", encoding="utf-8") as f:
         f.write(f"---\ntitle: {json.dumps(judul)}\ndate: {date.today().isoformat()}\n"
-                f"category: {a.kategori}\nexcerpt: {json.dumps(ringkasan)}\n---\n\n{isi}\n")
+                f"category: {kategori}\nexcerpt: {json.dumps(ringkasan)}\n---\n\n{isi}\n")
 
     idx = json.load(open(INDEX, encoding="utf-8")) if os.path.exists(INDEX) else []
     idx = [x for x in idx if x.get("slug") != slug]
     idx.insert(0, {"slug": slug, "title": judul, "date": date.today().isoformat(),
-                   "category": a.kategori, "excerpt": ringkasan})
+                   "category": kategori, "excerpt": ringkasan})
     idx.sort(key=lambda x: x.get("date", ""), reverse=True)
     json.dump(idx, open(INDEX, "w", encoding="utf-8"), ensure_ascii=False, indent=2)
     print(f"OK: {target} ({len(isi)} karakter)")
