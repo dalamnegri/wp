@@ -121,10 +121,12 @@ def ambil_gambar_pexels(slug, kategori):
         return None
     try:
         q = KATEGORI_QUERY.get(kategori, "insurance family")
+        ua = {"User-Agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 "
+                            "(KHTML, like Gecko) Chrome/120.0 Safari/537.36"}
         req = urllib.request.Request(
             PEXELS_SEARCH + "?" + urllib.parse.urlencode(
                 {"query": q, "per_page": 3, "orientation": "landscape"}),
-            headers={"Authorization": key})
+            headers={"Authorization": key, **ua})
         with urllib.request.urlopen(req, timeout=30) as r:
             fotos = (json.load(r) or {}).get("photos") or []
         if not fotos:
@@ -136,7 +138,10 @@ def ambil_gambar_pexels(slug, kategori):
             return None
         dest = os.path.join(REPO_DIR, "content", "images", slug + ".jpg")
         os.makedirs(os.path.dirname(dest), exist_ok=True)
-        with urllib.request.urlopen(src, timeout=60) as fr, open(dest, "wb") as fw:
+        dl = urllib.request.Request(src, headers={
+            "User-Agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 "
+                          "(KHTML, like Gecko) Chrome/120.0 Safari/537.36"})
+        with urllib.request.urlopen(dl, timeout=60) as fr, open(dest, "wb") as fw:
             fw.write(fr.read())
         print(f"OK gambar: content/images/{slug}.jpg")
         return {"image": f"/content/images/{slug}.jpg",
