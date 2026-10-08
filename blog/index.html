@@ -43,11 +43,7 @@
   const q = new URLSearchParams(location.search);
   const s = (q.get('s')||'').toLowerCase(), cat = q.get('cat')||'';
   const linkOf = p => p.file || ('/blog/post.html?p='+p.slug);
-  const STATIC = [
-    {slug:'asuransi-kesehatan-terbaik-2026',file:'/blog/asuransi-kesehatan-terbaik-2026.html',title:'Asuransi Kesehatan Terbaik 2026 untuk Keluarga',date:'2026-10-08',category:'Kesehatan',excerpt:'Perbandingan premi & manfaat + tips klaim.'},
-    {slug:'asuransi-jiwa-vs-investasi',file:'/blog/asuransi-jiwa-vs-investasi.html',title:'Asuransi Jiwa vs Investasi: Mana Duluan?',date:'2026-10-05',category:'Jiwa',excerpt:'Urutan prioritas keuangan yang benar.'},
-    {slug:'asuransi-mobil-all-risk-vs-tlo',file:'/blog/asuransi-mobil-all-risk-vs-tlo.html',title:'Asuransi Mobil All Risk vs TLO',date:'2026-10-01',category:'Kendaraan',excerpt:'Hitungan premi + contoh klaim.'}
-  ];
+  const STATIC = [];
   if(s) document.getElementById('archive-title').textContent = 'Pencarian: ' + q.get('s');
   if(cat) document.getElementById('archive-title').textContent = 'Kategori: ' + cat;
   fetch('/content/index.json').then(r=>r.json()).then(dyn=>{

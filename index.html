@@ -67,11 +67,7 @@
 <div class="bottombar"><div class="wrap"><span>© 2026 BlogInsurance.my.id — Seluruh hak cipta dilindungi.</span><span><a href="/">Beranda</a><a href="/tentang.html">Tentang</a><a href="/kontak.html">Kontak</a></span></div></div>
 
 <script>
-const STATIC = [
-  {slug:'asuransi-kesehatan-terbaik-2026',file:'/blog/asuransi-kesehatan-terbaik-2026.html',title:'Asuransi Kesehatan Terbaik 2026 untuk Keluarga',date:'2026-10-08',category:'Kesehatan',excerpt:'Bandingkan 5 polis populer: premi, manfaat rawat inap, limit tahunan, dan tips klaim agar tidak ditolak.',score:'8.9'},
-  {slug:'asuransi-jiwa-vs-investasi',file:'/blog/asuransi-jiwa-vs-investasi.html',title:'Asuransi Jiwa vs Investasi: Mana Duluan?',date:'2026-10-05',category:'Jiwa',excerpt:'Urutan prioritas keuangan yang benar: proteksi dulu, baru investasi. Simulasi usia 25–40 tahun.',score:'8.5'},
-  {slug:'asuransi-mobil-all-risk-vs-tlo',file:'/blog/asuransi-mobil-all-risk-vs-tlo.html',title:'Asuransi Mobil All Risk vs TLO',date:'2026-10-01',category:'Kendaraan',excerpt:'Kapan pilih All Risk, kapan cukup TLO? Hitung-hitungan premi + contoh klaim banjir dan tabrakan.',score:'8.2'}
-];
+const STATIC = [];
 const EMOJI = {Kesehatan:'🏥',Jiwa:'❤️',Kendaraan:'🚗',Umum:'🛡️'};
 const linkOf = p => p.file || ('/blog/post.html?p='+p.slug);
 const badge = c => c==='Kesehatan'?'':' blue';
@@ -80,6 +76,13 @@ fetch('/content/index.json').then(r=>r.json()).then(dyn=>{
   const seen = new Set(STATIC.map(p=>p.slug));
   const extra = (Array.isArray(dyn)?dyn:[]).filter(p=>!seen.has(p.slug)).map(p=>({...p,category:p.category||'Umum'}));
   const posts = [...extra, ...STATIC];
+  if(!posts.length){
+    document.getElementById('ticker').innerHTML = '<a href="/blog/">Belum ada artikel — segera hadir.</a>';
+    document.getElementById('featured').innerHTML = '<div class="block" style="grid-column:1/-1"><div style="padding:24px">Belum ada artikel. Artikel baru segera terbit.</div></div>';
+    document.getElementById('latest').innerHTML = '';
+    document.getElementById('autoblog').innerHTML = '';
+    return;
+  }
   // ticker
   const items = posts.slice(0,6).map(p=>`<a href="${linkOf(p)}"><b>●</b>${p.title}</a>`).join('');
   document.getElementById('ticker').innerHTML = items + items;
