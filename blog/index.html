@@ -2,34 +2,81 @@
 <html lang="id">
 <head>
 <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Daftar Artikel — BlogInsurance.my.id</title>
+<title>Arsip Artikel — BlogInsurance.my.id</title>
 <link rel="stylesheet" href="/styles.css" />
 </head>
 <body>
-<header class="site-header"><div class="container nav">
-<a class="brand" href="/">🛡️ BlogInsurance<span>.my.id</span></a>
-<nav><a href="/">Beranda</a><a href="/blog/">Artikel</a><a href="/tentang.html">Tentang</a><a href="/kontak.html">Kontak</a><a href="/admin/">Admin</a></nav>
+<div class="topbar"><div class="container"><span>Panduan asuransi yang jujur &amp; praktis</span><a href="/admin/">Login Penulis</a></div></div>
+<header class="masthead"><div class="container">
+  <div><h1 class="site-title"><a href="/">🛡️ BlogInsurance.my.id</a></h1><p class="site-desc">Panduan asuransi kesehatan, jiwa, dan kendaraan untuk keluarga Indonesia</p></div>
+  <form class="searchbox" action="/blog/" method="get"><input type="search" name="s" placeholder="Cari artikel..." /><button type="submit">Cari</button></form>
 </div></header>
-<main class="container">
-<h1>Semua Artikel</h1>
-<div id="dynamic"></div>
-<h2 style="margin-top:32px">Artikel pilihan</h2>
-<div class="grid">
-<article class="card"><h3><a href="/blog/asuransi-kesehatan-terbaik-2026.html">Asuransi Kesehatan Terbaik 2026 untuk Keluarga</a></h3><p class="meta">Kesehatan • 7 menit</p><p>Perbandingan premi & manfaat + tips klaim.</p></article>
-<article class="card"><h3><a href="/blog/asuransi-jiwa-vs-investasi.html">Asuransi Jiwa vs Investasi</a></h3><p class="meta">Jiwa • 5 menit</p><p>Urutan prioritas keuangan yang benar.</p></article>
-<article class="card"><h3><a href="/blog/asuransi-mobil-all-risk-vs-tlo.html">All Risk vs TLO</a></h3><p class="meta">Kendaraan • 6 menit</p><p>Hitungan premi + contoh klaim.</p></article>
-</div>
-<p><a href="/">← Kembali ke beranda</a> • <a href="/admin/">+ Tulis artikel baru</a></p>
+<nav class="mainnav"><div class="container">
+  <a href="/">Beranda</a><a href="/blog/" class="active">Artikel</a><a href="/blog/?cat=Kesehatan">Kesehatan</a><a href="/blog/?cat=Jiwa">Jiwa</a><a href="/blog/?cat=Kendaraan">Kendaraan</a><a href="/tentang.html">Tentang</a><a href="/kontak.html">Kontak</a>
+</div></nav>
+
+<div class="container layout">
+<main class="content">
+  <div class="pagehead"><h1 id="archive-title">Semua Artikel</h1><p id="archive-desc">Jelajahi seluruh panduan.</p></div>
+  <div id="list"></div>
+  <article class="entry static-entry">
+    <h2><a href="/blog/asuransi-kesehatan-terbaik-2026.html">Asuransi Kesehatan Terbaik 2026 untuk Keluarga</a></h2>
+    <p class="byline">8 Oktober 2026 • Kategori: Kesehatan • 7 menit baca</p>
+    <p>Perbandingan premi &amp; manfaat + tips klaim.</p>
+    <a class="readmore" href="/blog/asuransi-kesehatan-terbaik-2026.html">Lanjutkan membaca →</a>
+  </article>
+  <article class="entry static-entry">
+    <h2><a href="/blog/asuransi-jiwa-vs-investasi.html">Asuransi Jiwa vs Investasi: Mana Duluan?</a></h2>
+    <p class="byline">5 Oktober 2026 • Kategori: Jiwa • 5 menit baca</p>
+    <p>Urutan prioritas keuangan yang benar.</p>
+    <a class="readmore" href="/blog/asuransi-jiwa-vs-investasi.html">Lanjutkan membaca →</a>
+  </article>
+  <article class="entry static-entry">
+    <h2><a href="/blog/asuransi-mobil-all-risk-vs-tlo.html">Asuransi Mobil All Risk vs TLO</a></h2>
+    <p class="byline">1 Oktober 2026 • Kategori: Kendaraan • 6 menit baca</p>
+    <p>Hitungan premi + contoh klaim.</p>
+    <a class="readmore" href="/blog/asuransi-mobil-all-risk-vs-tlo.html">Lanjutkan membaca →</a>
+  </article>
 </main>
+<aside class="sidebar">
+  <div class="widget"><h3>Cari</h3><form class="searchbox" action="/blog/" method="get"><input type="search" name="s" placeholder="Kata kunci..." /><button type="submit">OK</button></form></div>
+  <div class="widget"><h3>Artikel Terbaru</h3><ul id="recent-posts"><li>Memuat...</li></ul></div>
+  <div class="widget"><h3>Kategori</h3><ul>
+    <li><a href="/blog/">Semua</a></li>
+    <li><a href="/blog/?cat=Kesehatan">Kesehatan</a></li>
+    <li><a href="/blog/?cat=Jiwa">Jiwa</a></li>
+    <li><a href="/blog/?cat=Kendaraan">Kendaraan</a></li>
+  </ul></div>
+  <div class="widget"><h3>Arsip</h3><ul><li><a href="/blog/">Oktober 2026</a></li></ul></div>
+</aside>
+</div>
+
+<footer class="footer-widgets"><div class="container">
+  <div><h4>BlogInsurance.my.id</h4><p>Blog edukasi asuransi Indonesia dengan bahasa sederhana.</p></div>
+  <div><h4>Tautan</h4><ul><li><a href="/">Beranda</a></li><li><a href="/blog/">Semua artikel</a></li><li><a href="/tentang.html">Tentang kami</a></li><li><a href="/kontak.html">Kontak</a></li></ul></div>
+  <div><h4>Kategori</h4><ul><li><a href="/blog/?cat=Kesehatan">Kesehatan</a></li><li><a href="/blog/?cat=Jiwa">Jiwa</a></li><li><a href="/blog/?cat=Kendaraan">Kendaraan</a></li></ul></div>
+</div></footer>
+<div class="colophon"><div class="container"><span>© 2026 BlogInsurance.my.id</span><span><a href="/admin/">Admin</a></span></div></div>
 <script>
-fetch('/content/index.json').then(r=>r.json()).then(posts=>{
-  if(!Array.isArray(posts)||!posts.length) return;
-  document.getElementById('dynamic').innerHTML =
-    '<div class="grid">' + posts.map(p=>
-      `<article class="card"><h3><a href="/blog/post.html?p=${p.slug}">${p.title}</a></h3><p class="meta">${p.date||''} • ${p.category||''}</p><p>${p.excerpt||''}</p></article>`
-    ).join('') + '</div>';
-}).catch(()=>{});
+(function(){
+  const q = new URLSearchParams(location.search);
+  const s = (q.get('s')||'').toLowerCase(), cat = q.get('cat')||'';
+  if(s) { document.getElementById('archive-title').textContent = 'Hasil pencarian: '+q.get('s'); }
+  if(cat) { document.getElementById('archive-title').textContent = 'Kategori: '+cat; }
+  fetch('/content/index.json').then(r=>r.json()).then(posts=>{
+    document.getElementById('recent-posts').innerHTML = posts.slice(0,5).map(p=>`<li><a href="/blog/post.html?p=${p.slug}">${p.title}</a></li>`).join('');
+    let f = posts;
+    if(cat) f = f.filter(p=>(p.category||'').toLowerCase()===cat.toLowerCase());
+    if(s) f = f.filter(p=>((p.title||'')+' '+(p.excerpt||'')).toLowerCase().includes(s));
+    if(cat||s){
+      document.querySelectorAll('.static-entry').forEach(e=>e.style.display='none');
+      document.getElementById('list').innerHTML = f.length
+        ? f.map(p=>`<article class="entry"><h2><a href="/blog/post.html?p=${p.slug}">${p.title}</a></h2><p class="byline">${p.date||''} • Kategori: ${p.category||''}</p><p>${p.excerpt||''}</p><a class="readmore" href="/blog/post.html?p=${p.slug}">Lanjutkan membaca →</a></article>`).join('')
+        : '<div class="entry"><p>Tidak ada artikel yang cocok. <a href="/blog/">Lihat semua</a></p></div>';
+      document.getElementById('archive-desc').textContent = f.length + ' artikel ditemukan.';
+    }
+  }).catch(()=>{ document.getElementById('recent-posts').innerHTML='<li><a href="/blog/">Lihat semua artikel</a></li>'; });
+})();
 </script>
-<footer class="site-footer"><div class="container"><p>© 2026 BlogInsurance.my.id</p></div></footer>
 </body>
 </html>

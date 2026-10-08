@@ -22,3 +22,46 @@ h2{margin-top:40px}
 .site-footer{margin-top:48px;padding:24px 0;color:var(--muted);border-top:1px solid #e2e8f0;font-size:.9rem}
 code{background:#f1f5f9;padding:2px 6px;border-radius:6px}
 ul.check{padding-left:20px}
+
+/* ===== Tema ala WordPress ===== */
+.topbar{background:#020617;color:#94a3b8;font-size:.8rem}
+.topbar .container{display:flex;justify-content:space-between;align-items:center;padding:6px 20px}
+.topbar a{color:#cbd5e1;text-decoration:none}
+.masthead{background:#fff;border-bottom:1px solid #e2e8f0}
+.masthead .container{display:flex;justify-content:space-between;align-items:center;gap:16px;padding:22px 20px;flex-wrap:wrap}
+.site-title{margin:0;font-size:1.7rem;letter-spacing:-.02em}
+.site-title a{color:var(--ink);text-decoration:none}
+.site-desc{margin:2px 0 0;color:var(--muted);font-size:.92rem}
+.searchbox{display:flex;gap:0}
+.searchbox input{border:1px solid #cbd5e1;border-right:0;border-radius:10px 0 0 10px;padding:9px 12px;font:inherit;min-width:200px}
+.searchbox button{border:1px solid var(--brand-d);background:var(--brand-d);color:#fff;border-radius:0 10px 10px 0;padding:9px 14px;cursor:pointer}
+.mainnav{background:#0f172a}
+.mainnav .container{display:flex;gap:4px;padding:0 20px;flex-wrap:wrap}
+.mainnav a{color:#cbd5e1;text-decoration:none;padding:12px 14px;font-size:.95rem}
+.mainnav a:hover,.mainnav a.active{background:#1e293b;color:#fff}
+.layout{display:grid;grid-template-columns:minmax(0,1fr) 300px;gap:28px;align-items:start;margin:28px auto}
+.content{min-width:0}
+.sidebar{display:flex;flex-direction:column;gap:20px}
+.widget{background:var(--card);border:1px solid #e2e8f0;border-radius:14px;padding:18px}
+.widget h3{margin:0 0 10px;font-size:1rem;text-transform:uppercase;letter-spacing:.04em;border-bottom:2px solid var(--brand);padding-bottom:8px}
+.widget ul{list-style:none;margin:0;padding:0}
+.widget li{padding:7px 0;border-bottom:1px dashed #e2e8f0}
+.widget li:last-child{border-bottom:0}
+.widget a{color:var(--brand-d);text-decoration:none}.widget a:hover{text-decoration:underline}
+.tagcloud{display:flex;flex-wrap:wrap;gap:8px}
+.tagcloud a{border:1px solid #cbd5e1;border-radius:999px;padding:3px 12px;font-size:.82rem;color:#334155}
+.entry{background:var(--card);border:1px solid #e2e8f0;border-radius:14px;padding:24px;margin-bottom:20px}
+.entry h2{margin:0 0 6px}.entry h2 a{color:var(--ink);text-decoration:none}.entry h2 a:hover{color:var(--brand-d)}
+.byline{color:var(--muted);font-size:.85rem;margin-bottom:10px}
+.readmore{color:var(--brand-d);font-weight:600;text-decoration:none}
+.pagehead{background:#fff;border:1px solid #e2e8f0;border-radius:14px;padding:22px 24px;margin-bottom:20px}
+.pagehead h1{margin:0}.pagehead p{color:var(--muted);margin:6px 0 0}
+.footer-widgets{background:#0f172a;color:#cbd5e1;margin-top:48px}
+.footer-widgets .container{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:24px;padding:36px 20px}
+.footer-widgets h4{color:#fff;margin:0 0 10px}
+.footer-widgets a{color:#93c5fd;text-decoration:none}
+.footer-widgets ul{list-style:none;margin:0;padding:0}.footer-widgets li{margin:6px 0}
+.colophon{background:#020617;color:#64748b;font-size:.85rem}
+.colophon .container{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;padding:14px 20px}
+.colophon a{color:#93c5fd;text-decoration:none}
+@media(max-width:860px){.layout{grid-template-columns:1fr}.searchbox input{min-width:0;width:100%}}

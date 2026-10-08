@@ -6,13 +6,22 @@
 <script src="https://cdn.jsdelivr.net/npm/marked@12.0.0/marked.min.js"></script>
 </head>
 <body>
-<header class="site-header"><div class="container nav">
-<a class="brand" href="/">🛡️ BlogInsurance<span>.my.id</span></a>
-<nav><a href="/">Beranda</a><a href="/blog/">Artikel</a><a href="/admin/">Admin</a></nav>
+<div class="topbar"><div class="container"><span>Panduan asuransi yang jujur &amp; praktis</span><a href="/admin/">Login Penulis</a></div></div>
+<header class="masthead"><div class="container">
+  <div><h1 class="site-title"><a href="/">🛡️ BlogInsurance.my.id</a></h1><p class="site-desc">Panduan asuransi kesehatan, jiwa, dan kendaraan untuk keluarga Indonesia</p></div>
+  <form class="searchbox" action="/blog/" method="get"><input type="search" name="s" placeholder="Cari artikel..." /><button type="submit">Cari</button></form>
 </div></header>
-<main class="container"><article class="post" id="post"><p class="meta">Memuat...</p></article>
+<nav class="mainnav"><div class="container">
+  <a href="/">Beranda</a><a href="/blog/">Artikel</a><a href="/blog/?cat=Kesehatan">Kesehatan</a><a href="/blog/?cat=Jiwa">Jiwa</a><a href="/blog/?cat=Kendaraan">Kendaraan</a><a href="/tentang.html">Tentang</a><a href="/kontak.html">Kontak</a>
+</div></nav>
+<div class="container layout"><main class="content"><article class="post" id="post"><p class="meta">Memuat...</p></article>
 <p><a href="/blog/">← Semua artikel</a></p></main>
-<footer class="site-footer"><div class="container"><p>© 2026 BlogInsurance.my.id</p></div></footer>
+<footer class="footer-widgets"><div class="container">
+  <div><h4>BlogInsurance.my.id</h4><p>Blog edukasi asuransi Indonesia dengan bahasa sederhana. Bukan saran finansial berlisensi.</p></div>
+  <div><h4>Tautan</h4><ul><li><a href="/">Beranda</a></li><li><a href="/blog/">Semua artikel</a></li><li><a href="/tentang.html">Tentang kami</a></li><li><a href="/kontak.html">Kontak</a></li></ul></div>
+  <div><h4>Kategori</h4><ul><li><a href="/blog/?cat=Kesehatan">Kesehatan</a></li><li><a href="/blog/?cat=Jiwa">Jiwa</a></li><li><a href="/blog/?cat=Kendaraan">Kendaraan</a></li></ul></div>
+</div></footer>
+<div class="colophon"><div class="container"><span>© 2026 BlogInsurance.my.id</span><span><a href="/admin/">Admin</a></span></div></div>
 <script>
 function esc(s){return (s||'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));}
 function parseFM(t){
