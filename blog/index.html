@@ -8,17 +8,28 @@
 <body>
 <header class="site-header"><div class="container nav">
 <a class="brand" href="/">🛡️ BlogInsurance<span>.my.id</span></a>
-<nav><a href="/">Beranda</a><a href="/blog/">Artikel</a><a href="/tentang.html">Tentang</a><a href="/kontak.html">Kontak</a></nav>
+<nav><a href="/">Beranda</a><a href="/blog/">Artikel</a><a href="/tentang.html">Tentang</a><a href="/kontak.html">Kontak</a><a href="/admin/">Admin</a></nav>
 </div></header>
 <main class="container">
 <h1>Semua Artikel</h1>
+<div id="dynamic"></div>
+<h2 style="margin-top:32px">Artikel pilihan</h2>
 <div class="grid">
 <article class="card"><h3><a href="/blog/asuransi-kesehatan-terbaik-2026.html">Asuransi Kesehatan Terbaik 2026 untuk Keluarga</a></h3><p class="meta">Kesehatan • 7 menit</p><p>Perbandingan premi & manfaat + tips klaim.</p></article>
 <article class="card"><h3><a href="/blog/asuransi-jiwa-vs-investasi.html">Asuransi Jiwa vs Investasi</a></h3><p class="meta">Jiwa • 5 menit</p><p>Urutan prioritas keuangan yang benar.</p></article>
 <article class="card"><h3><a href="/blog/asuransi-mobil-all-risk-vs-tlo.html">All Risk vs TLO</a></h3><p class="meta">Kendaraan • 6 menit</p><p>Hitungan premi + contoh klaim.</p></article>
 </div>
-<p><a href="/">← Kembali ke beranda</a></p>
+<p><a href="/">← Kembali ke beranda</a> • <a href="/admin/">+ Tulis artikel baru</a></p>
 </main>
+<script>
+fetch('/content/index.json').then(r=>r.json()).then(posts=>{
+  if(!Array.isArray(posts)||!posts.length) return;
+  document.getElementById('dynamic').innerHTML =
+    '<div class="grid">' + posts.map(p=>
+      `<article class="card"><h3><a href="/blog/post.html?p=${p.slug}">${p.title}</a></h3><p class="meta">${p.date||''} • ${p.category||''}</p><p>${p.excerpt||''}</p></article>`
+    ).join('') + '</div>';
+}).catch(()=>{});
+</script>
 <footer class="site-footer"><div class="container"><p>© 2026 BlogInsurance.my.id</p></div></footer>
 </body>
 </html>

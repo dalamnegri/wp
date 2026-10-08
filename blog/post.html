@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="id">
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Artikel — BlogInsurance.my.id</title>
+<link rel="stylesheet" href="/styles.css" />
+<script src="https://cdn.jsdelivr.net/npm/marked@12.0.0/marked.min.js"></script>
+</head>
+<body>
+<header class="site-header"><div class="container nav">
+<a class="brand" href="/">🛡️ BlogInsurance<span>.my.id</span></a>
+<nav><a href="/">Beranda</a><a href="/blog/">Artikel</a><a href="/admin/">Admin</a></nav>
+</div></header>
+<main class="container"><article class="post" id="post"><p class="meta">Memuat...</p></article>
+<p><a href="/blog/">← Semua artikel</a></p></main>
+<footer class="site-footer"><div class="container"><p>© 2026 BlogInsurance.my.id</p></div></footer>
+<script>
+function esc(s){return (s||'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));}
+function parseFM(t){
+  const m = t.match(/^---\n([\s\S]*?)\n---\n([\s\S]*)$/);
+  if(!m) return {meta:{}, body:t};
+  const meta={}; m[1].split('\n').forEach(l=>{const i=l.indexOf(':'); if(i>0) meta[l.slice(0,i).trim()]=l.slice(i+1).trim().replace(/^"|"$/g,'');});
+  return {meta, body:m[2]};
+}
+(async()=>{
+  const slug = new URLSearchParams(location.search).get('p');
+  const box = document.getElementById('post');
+  if(!slug){ box.innerHTML='<h1>Slug kosong</h1><p>Contoh: /blog/post.html?p=asuransi-jiwa-vs-investasi</p>'; return; }
+  try{
+    const r = await fetch('/content/posts/'+slug+'.md');
+    if(!r.ok) throw new Error('Artikel tidak ditemukan (tunggu deploy / cek slug).');
+    const {meta, body} = parseFM(await r.text());
+    const html = (window.marked) ? marked.parse(body) : '<pre>'+esc(body)+'</pre>';
+    box.innerHTML = `<p class="meta">${esc(meta.date||'')} • ${esc(meta.category||'')}</p><h1>${esc(meta.title||slug)}</h1>` + html;
+    document.title = (meta.title||slug)+' — BlogInsurance';
+  }catch(e){ box.innerHTML = '<h1>Gagal memuat</h1><p>'+esc(e.message)+'</p>'; }
+})();
+</script>
+</body>
+</html>

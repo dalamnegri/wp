@@ -1,0 +1,109 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Admin — BlogInsurance.my.id</title>
+<link rel="stylesheet" href="/styles.css" />
+<style>.form{background:#fff;border:1px solid #e2e8f0;border-radius:14px;padding:24px;margin:24px 0}
+label{display:block;font-weight:600;margin:14px 0 4px}
+input,select,textarea{width:100%;padding:10px;border:1px solid #cbd5e1;border-radius:10px;font:inherit}
+textarea{min-height:220px;font-family:ui-monospace,Menlo,Consolas,monospace}
+.row{display:flex;gap:12px}.row>div{flex:1}
+.hint{color:#64748b;font-size:.88rem}
+#status{margin-top:12px;font-weight:600}</style>
+</head>
+<body>
+<header class="site-header"><div class="container nav">
+<a class="brand" href="/">🛡️ BlogInsurance<span>.my.id</span></a>
+<nav><a href="/">Beranda</a><a href="/blog/">Artikel</a><a href="/admin/">Admin</a></nav>
+</div></header>
+<main class="container">
+<h1>Admin Blog (Git-based)</h1>
+<p class="hint">100% statis, cocok untuk Cloudflare Pages. Token GitHub hanya disimpan di browser kamu (localStorage), tidak pernah masuk ke repo.
+Buat token baru di GitHub → Settings → Developer settings → Personal access tokens → Fine-grained:
+pilih repo <code>dalamnegri/wp</code>, izin <code>Contents: Read and write</code>. Jangan pakai token lama yang bocor.</p>
+
+<div class="form">
+<div class="row">
+<div><label>Owner</label><input id="owner" value="dalamnegri" /></div>
+<div><label>Repo</label><input id="repo" value="wp" /></div>
+<div><label>Branch</label><input id="branch" value="main" /></div>
+</div>
+<label>GitHub Token (hanya di browser ini)</label>
+<input id="token" type="password" placeholder="github_pat_..." autocomplete="off" />
+<div class="row">
+<div><button class="btn primary" id="saveToken" style="color:#00121c;margin-top:10px">Simpan token di browser</button></div>
+<div><button class="btn" id="clearToken" style="color:#0f172a;margin-top:10px">Hapus token</button></div>
+</div>
+
+<hr style="margin:24px 0" />
+<label>Judul</label><input id="title" placeholder="Contoh: Asuransi Pendidikan Terbaik 2026" />
+<div class="row">
+<div><label>Slug (otomatis)</label><input id="slug" placeholder="asuransi-pendidikan-terbaik-2026" /></div>
+<div><label>Kategori</label><input id="category" value="Kesehatan" /></div>
+</div>
+<label>Tanggal</label><input id="date" type="date" />
+<label>Ringkasan (excerpt)</label><input id="excerpt" placeholder="1 kalimat ringkasan untuk kartu artikel" />
+<label>Isi (Markdown)</label>
+<textarea id="body">## Subjudul
+
+Tulis artikel di sini dengan format Markdown. **Tebal**, *miring*, list:
+
+- Poin 1
+- Poin 2
+</textarea>
+<button class="btn primary" id="publish" style="color:#00121c;margin-top:14px">Publikasikan → commit ke GitHub</button>
+<p id="status"></p>
+<p class="hint">Cara kerja: admin membuat file <code>content/posts/&lt;slug&gt;.md</code> + update <code>content/index.json</code> via GitHub Contents API.
+Cloudflare Pages yang tersambung via Connect to Git akan deploy otomatis 1–2 menit. Baca di <code>/blog/post.html?p=&lt;slug&gt;</code>.</p>
+</div>
+<p><a href="/blog/">← Lihat blog</a></p>
+</main>
+<script>
+const $ = id => document.getElementById(id);
+$('date').value = new Date().toISOString().slice(0,10);
+$('token').value = localStorage.getItem('gh_token') || '';
+$('title').addEventListener('input', e => {
+  $('slug').value = e.target.value.toLowerCase()
+    .replace(/[^a-z0-9\s-]/g,'').trim().replace(/\s+/g,'-').replace(/-+/g,'-').slice(0,80);
+});
+$('saveToken').onclick = () => { localStorage.setItem('gh_token', $('token').value.trim()); setStatus('Token tersimpan di browser ini.', true); };
+$('clearToken').onclick = () => { localStorage.removeItem('gh_token'); $('token').value=''; setStatus('Token dihapus.', true); };
+function setStatus(m, ok){ const s=$('status'); s.textContent=m; s.style.color= ok ? '#15803d' : '#b91c1c'; }
+function b64(s){ return btoa(unescape(encodeURIComponent(s))); }
+async function gh(path, method, body){
+  const owner=$('owner').value.trim(), repo=$('repo').value.trim();
+  const r = await fetch(`https://api.github.com/repos/${owner}/${repo}/contents/${path}`, {
+    method, headers:{ 'Authorization':'Bearer '+localStorage.getItem('gh_token'), 'Accept':'application/vnd.github+json', 'Content-Type':'application/json' },
+    body: body ? JSON.stringify(body) : undefined });
+  const j = await r.json().catch(()=>({}));
+  if(!r.ok) throw new Error(j.message || ('HTTP '+r.status));
+  return j;
+}
+async function getSha(path){
+  try { const j = await gh(path,'GET'); return j.sha; } catch(e){ return null; }
+}
+$('publish').onclick = async () => {
+  try{
+    const token = localStorage.getItem('gh_token');
+    if(!token) return setStatus('Isi & simpan token GitHub dulu.', false);
+    const slug = $('slug').value.trim(), title=$('title').value.trim();
+    if(!slug || !title) return setStatus('Judul & slug wajib diisi.', false);
+    setStatus('Mengirim ke GitHub...', true);
+    const owner=$('owner').value.trim(), repo=$('repo').value.trim(), branch=$('branch').value.trim()||'main';
+    const md = `---\ntitle: ${JSON.stringify(title)}\ndate: ${$('date').value}\ncategory: ${$('category').value}\nexcerpt: ${JSON.stringify($('excerpt').value)}\n---\n\n${$('body').value}\n`;
+    const mdPath = `content/posts/${slug}.md`;
+    await gh(mdPath,'PUT',{ message:`Post: ${title}`, content:b64(md), branch, ...(await getSha(mdPath) ? {sha: await getSha(mdPath)} : {}) });
+    // update index.json
+    let idx = [];
+    try { const cur = await gh('content/index.json','GET'); idx = JSON.parse(decodeURIComponent(escape(atob(cur.content.replace(/\n/g,''))))); var idxSha = cur.sha; } catch(e){ idx = []; }
+    idx = idx.filter(x=>x.slug!==slug);
+    idx.unshift({ slug, title, date:$('date').value, category:$('category').value, excerpt:$('excerpt').value });
+    idx.sort((a,b)=> (b.date||'').localeCompare(a.date||''));
+    await gh('content/index.json','PUT',{ message:`Index: ${slug}`, content:b64(JSON.stringify(idx,null,2)+'\n'), branch, ...(idxSha?{sha:idxSha}:{}) });
+    setStatus(`Berhasil! Lihat di /blog/post.html?p=${slug} (tunggu deploy 1–2 mnt).`, true);
+  }catch(e){ setStatus('Gagal: '+e.message, false); }
+};
+</script>
+</body>
+</html>
