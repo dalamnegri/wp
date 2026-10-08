@@ -76,7 +76,7 @@ docker-compose.yml         WordPress lokal opsional (arsip cara lama)
 ## Contoh 1 artikel jadi
 
 **Cara Memilih Asuransi Kesehatan untuk Orang Tua di Atas 60 Tahun**
-- URL: `/blog/post.html?p=cara-memilih-asuransi-kesehatan-untuk-orang-tua-di-atas-60-tahun`
+- Live: `https://bloginsurance.my.id/blog/post.html?p=cara-memilih-asuransi-kesehatan-untuk-orang-tua-di-atas-60-tahun`
 - Kategori: Kesehatan • 384 kata • Foto: Pexels + kredit fotografer
 - Ringkasan: *"Memilih asuransi kesehatan untuk orang tua di atas 60 tahun butuh
   strategi khusus karena premi lebih mahal, ada batas usia masuk, dan risiko
@@ -85,6 +85,8 @@ docker-compose.yml         WordPress lokal opsional (arsip cara lama)
   Jenis Produk dan Manfaatnya → Contoh Perhitungan Sederhana (premi Rp2,5 jt/bln
   untuk usia 62 thn, limit Rp500 jt) → Tips Praktis Sebelum Membeli →
   disclaimer edukasi.
+
+Contoh artikel bergambar (Pexels): `https://bloginsurance.my.id/blog/post.html?p=asuransi-kesehatan-untuk-anak-manfaat-yang-wajib-ada`
 
 File sumbernya (`content/posts/...md`): frontmatter `title/date/category/excerpt`
 (+ `image/image_credit/image_url` bila bergambar) lalu isi Markdown.
