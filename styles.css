@@ -190,4 +190,8 @@ ul.check{padding-left:20px}
   .row{flex-direction:column}
   .wrap{padding:0 14px}
   .topbar2{font-size:.72rem}
+  /* Samakan lebar header & artikel di mobile: semua 14px */
+  .topbar2 .wrap{padding:7px 14px}
+  .brandrow .wrap{padding:14px}
+  .mag-nav .wrap{padding:0 14px}
 }
