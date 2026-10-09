@@ -1,44 +1,68 @@
 <!doctype html>
 <html lang="id"><head><meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Tentang — BlogInsurance.my.id</title><link rel="stylesheet" href="/styles.css" /></head>
-<body><div class="ed-top"><div class="ed-wrap"><span>Panduan asuransi yang jujur &amp; praktis</span><span><a href="/tentang.html">Tentang</a><a href="/kontak.html">Kontak</a><a href="/admin/">Login Penulis</a></span></div></div>
+<title>Tentang Kami — BlogInsurance.my.id</title>
+<meta name="description" content="Tentang BlogInsurance.my.id: blog edukasi asuransi Indonesia yang independen, tenang, praktis, dan jujur." />
+<link rel="stylesheet" href="/styles.css" /></head>
+<body>
+<div class="ed-top"><div class="ed-wrap"><span>Panduan asuransi yang jujur &amp; praktis</span><span><a href="/tentang.html">Tentang</a><a href="/kontak.html">Kontak</a><a href="/admin/">Login Penulis</a></span></div></div>
 <header class="ed-mast"><div class="ed-wrap">
   <div><a class="ed-logo" href="/">🛡️ Blog<em>Insurance</em><small>.my.id</small></a><p class="ed-tag">PANDUAN ASURANSI KELUARGA</p></div>
   <form class="ed-search" action="/blog/" method="get"><input type="search" name="s" placeholder="Cari artikel..." /><button type="submit">Cari</button></form>
 </div></header>
-<nav class="ed-nav"><input type="checkbox" id="navtoggle" class="navcheck" /><div class="ed-wrap"><label class="burger2" for="navtoggle">☰ Menu</label><a href="/">Beranda</a><a href="/blog/">Artikel</a><a href="/blog/?cat=Kesehatan">Kesehatan</a><a href="/blog/?cat=Jiwa">Jiwa</a><a href="/blog/?cat=Kendaraan">Kendaraan</a><a href="/tentang.html">Tentang</a><a href="/kontak.html">Kontak</a></div></nav>
-<div class="wrap mag-layout"><main class="content"><article class="post"><h1>Tentang</h1>
-<p>BlogInsurance.my.id adalah blog edukasi asuransi Indonesia. Kami bukan agen dan bukan penasihat berlisensi — kami merangkum polis dengan bahasa sederhana.</p>
-<p>Misi: 1 juta keluarga Indonesia paham proteksi sebelum membeli.</p>
-</article></main>
-<aside class="side">
-  <div class="widget"><h3><span>Ikuti Kami</span></h3><div class="body"><div class="social-grid">
-    <a href="#">📘<br />Facebook</a><a href="#">✖️<br />Twitter/X</a><a href="#">📸<br />Instagram</a><a href="#">▶️<br />YouTube</a>
-  </div></div></div>
-  <div class="widget"><div class="tabbtns"><button id="tab-pop" class="on">Populer</button><button id="tab-new">Terbaru</button></div><div class="body"><ul id="side-list"><li>Memuat...</li></ul></div></div>
-  <div class="widget"><h3><span>Newsletter</span></h3><div class="body newsletter">
-    <form action="mailto:halo@bloginsurance.my.id" method="post" enctype="text/plain"><input type="email" name="email" placeholder="Alamat email..." required /><button type="submit">Berlangganan</button></form>
-  </div></div>
-  <div class="widget"><h3><span>Kategori</span></h3><div class="body"><ul>
-    <li><a href="/blog/?cat=Kesehatan">Kesehatan</a></li><li><a href="/blog/?cat=Jiwa">Jiwa</a></li><li><a href="/blog/?cat=Kendaraan">Kendaraan</a></li>
-  </ul></div></div>
-</aside>
-<script>
-fetch('/content/index.json').then(r=>r.json()).then(posts=>{
-  const linkOf = p => '/blog/post.html?p='+p.slug;
-  const pop=[...posts].slice(0,5), fresh=[...posts].sort((a,b)=>(b.date||'').localeCompare(a.date||'')).slice(0,5);
-  const draw=(arr,ranked)=>document.getElementById('side-list').innerHTML=arr.map((p,i)=>ranked?`<li class="rank"><span class="n">${i+1}</span><span><a href="${linkOf(p)}">${p.title}</a><br /><small style="color:#888">${p.date||''}</small></span></li>`:`<li><a href="${linkOf(p)}">${p.title}</a><br /><small style="color:#888">${p.date||''}</small></li>`).join('');
-  draw(pop,true);
-  document.getElementById('tab-pop').onclick=e=>{document.getElementById('tab-new').classList.remove('on');e.target.classList.add('on');draw(pop,true);};
-  document.getElementById('tab-new').onclick=e=>{document.getElementById('tab-pop').classList.remove('on');e.target.classList.add('on');draw(fresh,false);};
-}).catch(()=>{document.getElementById('side-list').innerHTML='<li><a href="/blog/">Lihat semua artikel</a></li>';});
-</script>
+<nav class="ed-nav"><input type="checkbox" id="navtoggle" class="navcheck" /><div class="ed-wrap"><label class="burger2" for="navtoggle">☰ Menu</label><a href="/">Beranda</a><a href="/blog/">Artikel</a><a href="/blog/?cat=Kesehatan">Kesehatan</a><a href="/blog/?cat=Jiwa">Jiwa</a><a href="/blog/?cat=Kendaraan">Kendaraan</a><a href="/tentang.html" class="on">Tentang</a><a href="/kontak.html">Kontak</a></div></nav>
+
+<div class="ed-wrap ed-sec" style="max-width:880px">
+<article class="single"><div class="pad">
+<p class="crumbs"><a href="/">Beranda</a> » Tentang Kami</p>
+<p class="eyebrow">✦ Tentang kami</p>
+<h1>Blog Edukasi Asuransi untuk Keluarga Indonesia</h1>
+<p><strong>BlogInsurance.my.id</strong> adalah blog edukasi asuransi berbahasa Indonesia. Kami percaya keputusan proteksi terbaik lahir dari pemahaman yang tenang — bukan dari ketakutan, bukan pula dari bujukan sales. Karena itu setiap artikel kami tulis dengan bahasa sederhana, contoh angka yang jujur, dan langkah praktis yang bisa langsung dipakai.</p>
+
+<h2>Misi kami</h2>
+<p>Misi kami sederhana: <strong>1 juta keluarga Indonesia paham proteksi sebelum membeli polis apa pun</strong>. Paham berapa uang pertanggungan yang cukup, paham isi polis yang ditandatangani, paham cara klaim saat musibah datang. Tiga nilai menuntun kerja kami:</p>
+<ul>
+<li><strong>Tenang</strong> — penjelasan jernih tanpa jargon menakutkan. Asuransi memang teknis, tapi tidak harus membingungkan.</li>
+<li><strong>Praktis</strong> — setiap panduan disertai contoh angka, simulasi, dan checklist. Pembaca pulang membawa hitungan, bukan sekadar teori.</li>
+<li><strong>Jujur</strong> — kami bukan agen dan bukan penjual polis. Kalau sebuah produk punya kelemahan, kami tulis kelemahannya.</li>
+</ul>
+
+<h2>Apa yang kami bahas</h2>
+<p>Kami membahas proteksi dari sudut pandang keluarga:</p>
+<ul>
+<li><strong>Kesehatan</strong> — memilih polis, memahami limit dan masa tunggu, strategi klaim, mengombinasikan BPJS dengan asuransi swasta.</li>
+<li><strong>Jiwa</strong> — menghitung uang pertanggungan, term-life vs unit-link, rider penyakit kritis, perencanaan ahli waris.</li>
+<li><strong>Kendaraan</strong> — All Risk vs TLO, perluasan banjir, prosedur klaim mobil dan motor.</li>
+<li><strong>Pendidikan, perjalanan, syariah &amp; keuangan keluarga</strong> — melengkapi piramida proteksi dari berbagai sisi.</li>
+</ul>
+
+<h2>Bagaimana artikel dibuat</h2>
+<p>Kami terbuka soal dapur redaksi. Artikel-artikel di sini disusun dengan bantuan kecerdasan buatan (DeepSeek) dari daftar topik yang dikurasi redaksi, lalu melalui pemeriksaan naskah: kejelasan bahasa, kewajaran angka, dan kesesuaian dengan praktik umum industri asuransi Indonesia. Setiap artikel mencantumkan disclaimer bahwa isinya bersifat edukasi.</p>
+<p>Foto sampul berasal dari <strong>Pexels</strong> (gratis digunakan) dan selalu kami sertai kredit fotografernya. Ringkasan berita luar — bila ada — selalu menautkan ke sumber aslinya, bukan menyalin isinya.</p>
+
+<h2>Yang bukan kami</h2>
+<ul>
+<li>Kami <strong>bukan</strong> agen asuransi, pialang, atau penasihat keuangan berlisensi.</li>
+<li>Kami <strong>tidak menjual</strong> polis dan tidak menerima komisi penjualan produk tertentu.</li>
+<li>Artikel kami <strong>bukan saran finansial personal</strong>. Kondisi setiap keluarga berbeda — untuk keputusan besar, konsultasikan dengan perencana keuangan atau agen berlisensi yang memahami situasimu.</li>
+</ul>
+
+<h2>Tim redaksi</h2>
+<p>Blog ini dikelola tim kecil <strong>Redaksi BlogInsurance</strong> — penulis, editor, dan kontributor lepas yang peduli literasi keuangan. Kami menerbitkan artikel baru secara berkala sesuai antrean topik yang bisa dilihat publik di repositori kami.</p>
+
+<h2>Pendanaan</h2>
+<p>Saat ini blog berjalan mandiri. Ke depan kami mungkin menayangkan iklan atau tautan afiliasi secukupnya untuk biaya operasional — dan bila itu terjadi, akan kami nyatakan secara terbuka di halaman ini dan di artikel terkait.</p>
+
+<h2>Hubungi kami</h2>
+<p>Koreksi fakta, kerja sama, atau sekadar sapa — kunjungi halaman <a href="/kontak.html">Kontak</a>. Koreksi yang terverifikasi akan kami perbaiki beserta catatan perbaikannya.</p>
+<p><a class="btn-solid" href="/blog/">Mulai membaca →</a></p>
+</div></article>
 </div>
+
 <footer class="foot-ed"><div class="ed-wrap">
   <div><h4>BlogInsurance.my.id</h4><p>Blog edukasi asuransi Indonesia dengan bahasa sederhana. Bukan saran finansial berlisensi.</p></div>
   <div><h4>Jelajahi</h4><ul><li><a href="/">Beranda</a></li><li><a href="/blog/">Semua artikel</a></li><li><a href="/tentang.html">Tentang kami</a></li><li><a href="/kontak.html">Kontak</a></li></ul></div>
   <div><h4>Kategori</h4><ul><li><a href="/blog/?cat=Kesehatan">Kesehatan</a></li><li><a href="/blog/?cat=Jiwa">Jiwa</a></li><li><a href="/blog/?cat=Kendaraan">Kendaraan</a></li></ul></div>
-  <div><h4>Bantuan</h4><ul><li><a href="/admin/">Login penulis</a></li><li><a href="/sitemap.xml">Sitemap</a></li></ul></div>
+  <div><h4>Bantuan</h4><ul><li><a href="/kontak.html">Kontak</a></li><li><a href="/tos.html">Syarat &amp; Ketentuan</a></li><li><a href="/privasi.html">Kebijakan Privasi</a></li><li><a href="/dmca.html">DMCA &amp; Hak Cipta</a></li><li><a href="/sitemap.xml">Sitemap</a></li><li><a href="/admin/">Login penulis</a></li></ul></div>
 </div></footer>
-<div class="bottom-ed"><div class="ed-wrap"><span>© 2026 BlogInsurance.my.id</span><span><a href="/admin/">Admin</a></span></div></div>
+<div class="bottom-ed"><div class="ed-wrap"><span>© 2026 BlogInsurance.my.id</span><span><a href="/tos.html">Syarat</a><a href="/privasi.html">Privasi</a><a href="/admin/">Admin</a></span></div></div>
 </body></html>
