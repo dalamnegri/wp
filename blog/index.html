@@ -6,58 +6,44 @@
 <link rel="stylesheet" href="/styles.css" />
 </head>
 <body>
-<div class="topbar2"><div class="wrap"><span>BlogInsurance.my.id</span><span><a href="/tentang.html">Tentang</a><a href="/kontak.html">Kontak</a><a href="/admin/">Login Penulis</a></span></div></div>
-<header class="brandrow"><div class="wrap">
-  <div><a class="logo" href="/">🛡️ Blog<em>Insurance</em>.my.id</a><p class="tagline">Panduan asuransi kesehatan, jiwa &amp; kendaraan untuk keluarga Indonesia</p></div>
-  <div class="adbox">Space Iklan 728 × 90</div>
+<div class="ed-top"><div class="ed-wrap"><span>Panduan asuransi yang jujur &amp; praktis</span><span><a href="/tentang.html">Tentang</a><a href="/kontak.html">Kontak</a><a href="/admin/">Login Penulis</a></span></div></div>
+<header class="ed-mast"><div class="ed-wrap">
+  <div><a class="ed-logo" href="/">🛡️ Blog<em>Insurance</em><small>.my.id</small></a><p class="ed-tag">PANDUAN ASURANSI KELUARGA</p></div>
+  <form class="ed-search" action="/blog/" method="get"><input type="search" name="s" placeholder="Cari artikel..." /><button type="submit">Cari</button></form>
 </div></header>
-<nav class="mag-nav"><input type="checkbox" id="navtoggle" class="navcheck" /><div class="wrap"><label class="burger" for="navtoggle">☰ Menu</label>
-  <a href="/">Beranda</a><a href="/blog/" class="on">Artikel</a><a href="/blog/?cat=Kesehatan">Kesehatan</a><a href="/blog/?cat=Jiwa">Jiwa</a><a href="/blog/?cat=Kendaraan">Kendaraan</a><a href="/tentang.html">Tentang</a><a href="/kontak.html">Kontak</a>
-</div></nav>
+<nav class="ed-nav"><input type="checkbox" id="navtoggle" class="navcheck" /><div class="ed-wrap"><label class="burger2" for="navtoggle">☰ Menu</label><a href="/">Beranda</a><a href="/blog/" class="on">Artikel</a><a href="/blog/?cat=Kesehatan">Kesehatan</a><a href="/blog/?cat=Jiwa">Jiwa</a><a href="/blog/?cat=Kendaraan">Kendaraan</a><a href="/tentang.html">Tentang</a><a href="/kontak.html">Kontak</a></div></nav>
 
-<div class="wrap mag-layout">
-<main>
-  <section class="block">
-    <div class="block-head"><h2><span id="archive-title">Semua Artikel</span></h2><span id="archive-count" style="font-size:.8rem;color:#888"></span></div>
-    <div id="list"></div>
-  </section>
-</main>
-<aside class="side">
-  <div class="widget"><h3><span>Cari</span></h3><div class="body"><form class="searchbox" action="/blog/" method="get"><input type="search" name="s" placeholder="Kata kunci..." /><button type="submit">OK</button></form></div></div>
-  <div class="widget"><h3><span>Artikel Terbaru</span></h3><div class="body"><ul id="recent-posts"><li>Memuat...</li></ul></div></div>
-  <div class="widget"><h3><span>Kategori</span></h3><div class="body"><ul>
-    <li><a href="/blog/">Semua</a></li><li><a href="/blog/?cat=Kesehatan">Kesehatan</a></li><li><a href="/blog/?cat=Jiwa">Jiwa</a></li><li><a href="/blog/?cat=Kendaraan">Kendaraan</a></li>
-  </ul></div></div>
-</aside>
+<div class="ed-wrap ed-sec">
+  <div class="ed-sec-head"><p class="eyebrow">Arsip redaksi</p><h1 id="archive-title" style="font-family:Georgia,serif;font-size:2rem;margin:8px 0">Semua Artikel</h1><p id="archive-count"></p></div>
+  <div id="list"></div>
 </div>
 
-<footer class="foot"><div class="wrap">
-  <div><h4>BlogInsurance.my.id</h4><p style="font-size:.87rem">Blog edukasi asuransi Indonesia dengan bahasa sederhana.</p></div>
-  <div><h4>Navigasi</h4><ul><li><a href="/">Beranda</a></li><li><a href="/blog/">Semua artikel</a></li><li><a href="/tentang.html">Tentang kami</a></li><li><a href="/kontak.html">Kontak</a></li></ul></div>
+<footer class="foot-ed"><div class="ed-wrap">
+  <div><h4>BlogInsurance.my.id</h4><p>Blog edukasi asuransi Indonesia dengan bahasa sederhana.</p></div>
+  <div><h4>Jelajahi</h4><ul><li><a href="/">Beranda</a></li><li><a href="/blog/">Semua artikel</a></li><li><a href="/tentang.html">Tentang kami</a></li><li><a href="/kontak.html">Kontak</a></li></ul></div>
   <div><h4>Kategori</h4><ul><li><a href="/blog/?cat=Kesehatan">Kesehatan</a></li><li><a href="/blog/?cat=Jiwa">Jiwa</a></li><li><a href="/blog/?cat=Kendaraan">Kendaraan</a></li></ul></div>
-  <div><h4>Lainnya</h4><ul><li><a href="/admin/">Login penulis</a></li><li><a href="/sitemap.xml">Sitemap</a></li></ul></div>
+  <div><h4>Bantuan</h4><ul><li><a href="/admin/">Login penulis</a></li><li><a href="/sitemap.xml">Sitemap</a></li></ul></div>
 </div></footer>
-<div class="bottombar"><div class="wrap"><span>© 2026 BlogInsurance.my.id</span><span><a href="/admin/">Admin</a></span></div></div>
+<div class="bottom-ed"><div class="ed-wrap"><span>© 2026 BlogInsurance.my.id</span><span><a href="/admin/">Admin</a></span></div></div>
 <script>
 (function(){
   const q = new URLSearchParams(location.search);
   const s = (q.get('s')||'').toLowerCase(), cat = q.get('cat')||'';
   const linkOf = p => p.file || ('/blog/post.html?p='+p.slug);
-  const bg = p => p.image ? ` style="background-image:url('${p.image}');background-size:cover;background-position:center"` : '';
-  const STATIC = [];
+  const EMOJI = {Kesehatan:'🏥',Jiwa:'❤️',Kendaraan:'🚗',Pendidikan:'🎓',Perjalanan:'✈️',Syariah:'🕌',Keuangan:'💰',Properti:'🏠',Umum:'🛡️'};
+  const bg = p => p.image ? ` style="background-image:url('${p.image}');background-size:cover;background-position:center"` : ` style="background:linear-gradient(135deg,#e9e2d3,#d8cdb4)"`;
+  const em = p => p.image ? '' : (EMOJI[p.category]||'🛡️');
   if(s) document.getElementById('archive-title').textContent = 'Pencarian: ' + q.get('s');
   if(cat) document.getElementById('archive-title').textContent = 'Kategori: ' + cat;
   fetch('/content/index.json').then(r=>r.json()).then(dyn=>{
-    const seen = new Set(STATIC.map(p=>p.slug));
-    let posts = [...(Array.isArray(dyn)?dyn:[]).filter(p=>!seen.has(p.slug)).map(p=>({...p,category:p.category||'Umum'})), ...STATIC];
-    document.getElementById('recent-posts').innerHTML = posts.slice(0,5).map(p=>`<li><a href="${linkOf(p)}">${p.title}</a></li>`).join('');
+    let posts = Array.isArray(dyn)?dyn:[];
     if(cat) posts = posts.filter(p=>(p.category||'').toLowerCase()===cat.toLowerCase());
     if(s) posts = posts.filter(p=>((p.title||'')+' '+(p.excerpt||'')).toLowerCase().includes(s));
     document.getElementById('archive-count').textContent = posts.length + ' artikel';
     document.getElementById('list').innerHTML = posts.length ? posts.map(p=>
-      `<article class="news-item"><a class="pic cat-${p.category}"${bg(p)} href="${linkOf(p)}"></a><div><span class="badge">${p.category}</span><h3><a href="${linkOf(p)}">${p.title}</a></h3><p class="byline">${p.date||''}</p><p class="excerpt">${p.excerpt||''}</p><a class="readmore2" href="${linkOf(p)}">Baca Selengkapnya »</a></div></article>`
-    ).join('') : '<div style="padding:20px">Tidak ada artikel yang cocok. <a href="/blog/">Lihat semua</a></div>';
-  }).catch(()=>{ document.getElementById('recent-posts').innerHTML='<li><a href="/blog/">Lihat semua artikel</a></li>'; });
+      `<article class="ed-row"><a class="pic" href="${linkOf(p)}"${bg(p)}>${em(p)}</a><div><span class="ed-cat">${p.category}</span><h3><a href="${linkOf(p)}">${p.title}</a></h3><p class="by">Redaksi • ${p.date||''}</p><p class="excerpt">${p.excerpt||''}</p><a class="read-ed" href="${linkOf(p)}">Baca Artikel →</a></div></article>`
+    ).join('') : '<div class="ed-row"><div><p>Tidak ada artikel yang cocok. <a href="/blog/">Lihat semua</a></p></div></div>';
+  }).catch(()=>{ document.getElementById('list').innerHTML='<div class="ed-row"><div><p><a href="/blog/">Lihat semua artikel →</a></p></div></div>'; });
 })();
 </script>
 </body>
